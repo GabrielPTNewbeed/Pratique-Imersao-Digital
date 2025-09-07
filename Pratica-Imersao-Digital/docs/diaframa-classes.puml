@@ -1,0 +1,54 @@
+@startuml
+class Usuario {
+  - id: int
+  - nome: String
+  - email: String
+  - telefone: String
+  - senha: String
+  - eventosParticipando: List<Evento>
+  + participarEvento()
+  + cancelarParticipacao()
+}
+
+class Evento {
+  - id: int
+  - nome: String
+  - endereco: String
+  - categoria: CategoriaEvento
+  - dataHora: LocalDateTime
+  - descricao: String
+  - participantes: List<Usuario>
+  + isOcorrendoAgora()
+  + isPassado()
+  + isFuturo()
+}
+
+enum CategoriaEvento {
+  FESTA
+  ESPORTIVO
+  SHOW
+  CULTURAL
+  GASTRONOMICO
+  EDUCACIONAL
+}
+
+class GerenciadorEventos {
+  - eventos: List<Evento>
+  - usuarios: List<Usuario>
+  - usuarioLogado: Usuario
+  + cadastrarEvento()
+  + getEventosOcorrendoAgora()
+}
+
+class FileManager {
+  - ARQUIVO_EVENTOS: String
+  + salvarEventos()
+  + carregarEventos()
+}
+
+Usuario "1" -- "*" Evento
+Evento "1" -- "1" CategoriaEvento
+GerenciadorEventos "1" -- "*" Evento
+GerenciadorEventos "1" -- "*" Usuario
+GerenciadorEventos --> FileManager
+@enduml

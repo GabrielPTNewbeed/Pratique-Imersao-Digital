@@ -1,0 +1,152 @@
+@startuml
+' Configurações iniciais
+hide empty members
+skinparam class {
+    BackgroundColor White
+    BorderColor Black
+    ArrowColor Black
+}
+
+' Enumerations
+enum CategoriaEvento {
+    FESTA
+    ESPORTIVO
+    SHOW
+    CULTURAL
+    GASTRONOMICO
+    EDUCACIONAL
+}
+
+' Classes Principais
+class Usuario {
+    - id: int
+    - nome: String
+    - email: String
+    - telefone: String
+    - senha: String
+    - eventosParticipando: List<Evento>
+    --
+    + Usuario(nome: String, email: String, telefone: String, senha: String)
+    + getId(): int
+    + getNome(): String
+    + setNome(nome: String): void
+    + getEmail(): String
+    + setEmail(email: String): void
+    + getTelefone(): String
+    + setTelefone(telefone: String): void
+    + getSenha(): String
+    + setSenha(senha: String): void
+    + getEventosParticipando(): List<Evento>
+    + participarEvento(evento: Evento): void
+    + cancelarParticipacao(evento: Evento): void
+    + toString(): String
+    + equals(obj: Object): boolean
+}
+
+class Evento {
+    - id: int
+    - nome: String
+    - endereco: String
+    - categoria: CategoriaEvento
+    - dataHora: LocalDateTime
+    - descricao: String
+    - participantes: List<Usuario>
+    --
+    + Evento(nome: String, endereco: String, categoria: CategoriaEvento, dataHora: LocalDateTime, descricao: String)
+    + getId(): int
+    + getNome(): String
+    + setNome(nome: String): void
+    + getEndereco(): String
+    + setEndereco(endereco: String): void
+    + getCategoria(): CategoriaEvento
+    + setCategoria(categoria: CategoriaEvento): void
+    + getDataHora(): LocalDateTime
+    + setDataHora(dataHora: LocalDateTime): void
+    + getDescricao(): String
+    + setDescricao(descricao: String): void
+    + getParticipantes(): List<Usuario>
+    + adicionarParticipante(usuario: Usuario): void
+    + removerParticipante(usuario: Usuario): void
+    + isOcorrendoAgora(): boolean
+    + isPassado(): boolean
+    + isFuturo(): boolean
+    + toString(): String
+}
+
+class GerenciadorEventos {
+    - eventos: List<Evento>
+    - usuarios: List<Usuario>
+    - usuarioLogado: Usuario
+    --
+    + GerenciadorEventos()
+    + cadastrarUsuario(usuario: Usuario): void
+    + fazerLogin(email: String, senha: String): boolean
+    + fazerLogout(): void
+    + cadastrarEvento(evento: Evento): void
+    + getEventos(): List<Evento>
+    + getEventosOrdenadosPorData(): List<Evento>
+    + getEventosFuturos(): List<Evento>
+    + getEventosPassados(): List<Evento>
+    + getEventosOcorrendoAgora(): List<Evento>
+    + buscarEventoPorId(id: int): Evento
+    + participarEvento(eventoId: int): void
+    + cancelarParticipacao(eventoId: int): void
+    + getEventosUsuario(): List<Evento>
+    + getUsuarioLogado(): Usuario
+    + isUsuarioLogado(): boolean
+}
+
+class FileManager {
+    - ARQUIVO_EVENTOS: String = "events.data"
+    - formatter: DateTimeFormatter
+    --
+    + salvarEventos(eventos: List<Evento>): void
+    + carregarEventos(): List<Evento>
+    - serializarEvento(evento: Evento): String
+    - desserializarEvento(linha: String): Evento
+}
+
+class MenuPrincipal {
+    - gerenciador: GerenciadorEventos
+    - scanner: Scanner
+    --
+    + MenuPrincipal()
+    + executar(): void
+    - exibirMenuLogin(): void
+    - exibirMenuPrincipal(): void
+    - fazerLogin(): void
+    - cadastrarUsuario(): void
+    - visualizarEventos(): void
+    - participarEvento(): void
+    - cadastrarEvento(): void
+    - visualizarMeusEventos(): void
+    - cancelarParticipacao(): void
+    - visualizarEventosOcorrendoAgora(): void
+}
+
+' Relacionamentos
+Usuario "1" -- "*" Evento : participa de >
+Evento "1" -- "*" Usuario : tem participantes >
+
+Evento "1" -- "1" CategoriaEvento : categorizado como >
+
+GerenciadorEventos "1" -- "1" FileManager : usa >
+GerenciadorEventos "1" -- "*" Evento : gerencia >
+GerenciadorEventos "1" -- "*" Usuario : gerencia >
+
+MenuPrincipal "1" -- "1" GerenciadorEventos : controla >
+
+' Notas e Anotações
+note top of GerenciadorEventos
+  Padrão Singleton poderia
+  ser aplicado aqui
+end note
+
+note right of FileManager
+  Responsável pela persistência
+  em arquivo texto
+end note
+
+@enduml
+
+https://www.plantuml.com/plantuml/png/jLVDRXit4BxhAGXTghHAWLuNRH15bXC3jgNg9paMe-LOPh9BAaEkchhemnGz5EYzJ-0NwwoMb9RYoaOEpI7UdVc-ZpF36NBrsZeWLvL5xninDlfERIg2nxyV_qKhb5Qv0cLxzqgYm7BhVXCbbciasxEVbDu2GIdo0gmLl_S4_ti3-QSDcKhBiIaCYG_toc7ZCIIH6kkRWc5xwuZ8_Des_j7ZE2QwAf70AQDj3_b5ZC7Xnf22oGwrCtwroybYETe_JHQpwNnvzNwwVrkyctxOFunNrylLV7IzVtaxMYpdqzlfpTLusf0kLkFH-6fwou3zkkCw4yvxHahdQbjdtYItiXMG2ik-54fcGcddtxGfCHCBnwoDDs49gZYnEIpmpkXJg4Lz3wVqVPPs1kHK7OYM9XFNoheVc_nVDRYN-p_VXV06xK26SGp3PFbXlF8BhxL1ToK7Bq9-tdJBocpqM6-tZJrQbZ4xe-IHEQcZIAd14GMPa9S-vfJVyfqcbgWiwZnJYU28of36dsu5IoMRmU1jW51Z7pIxc8dcDLREGUTO01rqStYQu4mJO987VgwWi0Ep_fY9wVeZveuHQsCA1CrjtNImb_oA1jOI2NDpOix376Qd8-a14XoyCmHS8PD3SS6WfIenUD7cf78ubJsKJZkqlhY-gUDMztd4dPu4EtmYpk6v48T9TF_VJFXuKtRBTvfKeX8IuzPEiWnwRTJvcYJI5xv4h1mNAUYs86VAcMg6wgPPjvt99YH2itQpi5ZQBem3oH2ZWTheGTM0Ck7HiJPXQNRuDGnbfxaXGYtDQEFh5KOl86PWBKZJvRgiN4MffslM3uFy5WbrhbZH7pDyzSQtHjTD8NmUoN15tckp0NdCDPwyTE51c8yS95X7G9xuJDNku069rrAwTVodDr9Ibi0pbHj4YY609q_Uz4nFp_4Jm9GaQaxOpWpL_VuSmM_eiyAX9vu59ktL2LzNDW-fSwHyLFdZdU6DzUaRwYgWdx-WKdnQrj04PtDRjRkjXdd3OIuIG7ATNQe2Rq331kdG_gFvpol-0lnbydvokvmkGXk9dqH_7xVzNeA3laVV6Ih1EQHCX2FhCfZYnhTGxE3Gyvr3Tbew8jm0dMkpyDr72WhrSBPfuojIeaqOXOh7fJ4VgtI3kWhViiMXJflZ86STKnt2oq5h95Pl7gAQnCg7Sm2_O5uve6WwNx9PhHNLb6RekxonO8G8SvzGqtCdTk-KhThrih4_7OTkzTYRYjzWPRiNw9oXfs9C9ZwWczydSnRRtsfbirC-RT7_eSzR8_hVziDtNdPCJaWKhthUta86SYOSbl4N6EDF2Fmd-GsM7Rwo7a0QaPlIrCIqereYqU1cehB0b9JHcL7essv6cbbCwSN3q0ef5QjJCzgHAMec5_xMEB02nKWRvtySz_WHXJDROUwwfsW6aXx_CcB1mrcWCrfiZQn7c7qMIS2sK3bJ17okL0-r5BLahn4cjRbtBDqk6FFcQBT6syS_TrY8BHR0_v5LrZt-e_EzCfO2Y0LtHZZyuinH-3K_LMNn7m00
