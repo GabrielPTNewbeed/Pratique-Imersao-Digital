@@ -1,0 +1,24 @@
+Proposta de Formato do Arquivo para inserir listas de magias:
+
+Nome: Bola de Fogo
+Nível: 3
+Escola: Evocação
+Tempo: 1 ação
+Alcance: 45 metros
+Componentes: V, S, M
+Duração: Instantânea
+Descrição: Uma explosão de chamas irrompe em um ponto à sua escolha dentro do alcance, causando 8d6 de dano de fogo em todas as criaturas na área.
+
+---
+Nome: Mísseis Mágicos
+Nível: 1
+Escola: Evocação
+Tempo: 1 ação
+Alcance: 36 metros
+Componentes: V, S
+Duração: Instantânea
+Descrição: Você cria três dardos luminosos de energia mágica que atingem criaturas à sua escolha, causando 1d4+1 de dano de energia em cada uma.
+
+Cada feitiço é separado por ---.
+🔹 Campos fixos: Nome, Nível, Escola, Tempo, Alcance, Componentes, Duração, Descrição.
+🔹 Se faltar um campo, o programa preenche com "".
